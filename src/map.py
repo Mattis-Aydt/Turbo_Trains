@@ -9,6 +9,8 @@ class Map:
     def load_data(self, ressources_path, map_name):
         with open(ressources_path + map_name, "r") as f:
             self.data = json.load(f)
+            for i in range(len(self.data["splines"])):
+                self.data["splines"][i]["id"] = i
             print(self.data)
         #self.check_splines()
 
@@ -36,6 +38,11 @@ class Map:
         for spline in splines:
             if is_interval_overlapping(start, finnish, spline["start"], spline["finnish"]):
                 relevant_splines.append(spline)
+        first_index = relevant_splines[0]["index"]
+        last_index = relevant_splines[-1]["index"]
+        relevant_splines.insert(0, self.data["splines"][first_index - 1])
+        relevant_splines.append(self.data["splines"][last_index + 1])
+
 
 
 
@@ -45,7 +52,7 @@ class Map:
 
 def draw_spline(win, cam, spline, step_size):
     polinomial_length = int((spline["finnish"] - spline["start"]) / step_size) + 1
-    starting_point = (spline["finnish"], evaluate_polinomial(spline["polinomial"], 0))
+    starting_point = (spline["start"], evaluate_polinomial(spline["polinomial"], 0))
     prev_point = (starting_point[0] - cam.get_x(), starting_point[1] - cam.get_y())
     for x in range(polinomial_length):
         x = x * step_size

@@ -15,7 +15,7 @@ clock = pygame.time.Clock()
 win = pygame.display.set_mode((1000, 1000))
 cam = camera.Camera((1000, 1000))
 map = map.Map()
-map.load_data("ressources/", "test_map.json")
+map.load_data("../ressources/", "test_map.json")
 
 run = True
 while run:
