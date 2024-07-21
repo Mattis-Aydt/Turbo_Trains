@@ -1,11 +1,31 @@
 {
     "map_name" : "test",
     "splines" : [
-        [0, 0, 0, 2],
-        [0, 0, 0.25, 2, 4],
-        [1, 1, 4, 9],
-        [6, 1, -0.5, 9, 10],
-        [6.5, 0, 10, 110]
+        {
+            "polinomial": [0, 0],
+            "start" : 0,
+            "finnish" : 2
+        },
+                {
+            "polinomial": [0, 0, 0.25],
+            "start" : 2,
+            "finnish" : 4
+        },
+                        {
+            "polinomial": [1,1],
+            "start" : 4,
+            "finnish" : 9
+        },
+                        {
+            "polinomial": [6, 1, -0.5],
+            "start" : 9,
+            "finnish" : 10
+        },
+                        {
+            "polinomial": [6.5, 0],
+            "start" : 10,
+            "finnish" : 100
+        }
 
     ]
 }

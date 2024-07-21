@@ -1,5 +1,5 @@
 import pygame
-import camera
+from src import camera
 import map
 
 def draw(win, cam, map):
