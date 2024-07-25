@@ -31,7 +31,7 @@ class Camera:
         return self.__zoom_y
 
     def transform_point_to_pixels(self, point):
-        result = point[0]/self.__zoom_x + self.__win_size[0]*.5, -point[1]/self.__zoom_y + self.__win_size[1]*.5
+        result = (point[0] - self.__x)/self.__zoom_x + self.__win_size[0]*.5, -(point[1] - self.__y)/self.__zoom_y + self.__win_size[1]*.5
         return result
 
     def transform_point_to_meters(self):

@@ -1,12 +1,17 @@
 import pygame
 from src import camera
+from src.train import Train
 import map
 
-def draw(win, cam, map):
+def draw(win, cam, map, train):
     win.fill((255, 255, 255))
     map.draw(win, cam)
+    train.draw(win, cam, map)
+
 
     pygame.display.update()
+
+
 
 
 framerate = 60
@@ -16,6 +21,8 @@ win = pygame.display.set_mode((1000, 1000))
 cam = camera.Camera((1000, 1000))
 map = map.Map()
 map.load_data("../ressources/", "test_map.json")
+train = Train(map)
+
 
 run = True
 while run:
@@ -43,8 +50,12 @@ while run:
         cam.move_y(-1000/framerate)
 
 
+
+
     clock.tick(framerate)
     cam.update()
+    train.update()
 
 
-    draw(win, cam, map)
+    draw(win, cam, map, train)
+

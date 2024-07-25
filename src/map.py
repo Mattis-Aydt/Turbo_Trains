@@ -1,17 +1,20 @@
 import pygame.draw
 import json
+from ttMath import *
 
 
 class Map:
     def __init__(self):
         self.data = {}
 
+        self.__prev_used_spline_index = 0
+
     def load_data(self, ressources_path, map_name):
         with open(ressources_path + map_name, "r") as f:
             self.data = json.load(f)
             for i in range(len(self.data["splines"])):
                 self.data["splines"][i]["id"] = i
-            print(self.data)
+
         #self.check_splines()
 
     # Check wether the splines have same derivatives at end and starting point
@@ -31,17 +34,64 @@ class Map:
         for spline in self.data["splines"]:
             draw_spline(win, cam, spline, 0.1)
 
-    def get_section_linear_approximation(self, start, finnish, lookahead=1, lookbehind=1, step_size=.1):
+    def get_section(self, start, finnish, lookahead=1, lookbehind=1):
         # Should be optimised with binary-search of section
+
+        # Get splines in section
         splines = self.data["splines"]
         relevant_splines = []
         for spline in splines:
-            if is_interval_overlapping(start, finnish, spline["start"], spline["finnish"]):
+            if is_interval_overlapping(start, finnish, spline["start"], spline["end"]):
                 relevant_splines.append(spline)
-        first_index = relevant_splines[0]["index"]
-        last_index = relevant_splines[-1]["index"]
-        relevant_splines.insert(0, self.data["splines"][first_index - 1])
-        relevant_splines.append(self.data["splines"][last_index + 1])
+        first_index = relevant_splines[0]["id"]
+        last_index = relevant_splines[-1]["id"]
+
+        for i in range(lookahead):
+            try:
+                relevant_splines.append(self.data["splines"][last_index + 1 + i])
+            except IndexError:
+                pass
+        for i in range(lookbehind):
+            index = first_index - i - 1
+            if index < 0:
+                break
+            relevant_splines.insert(0, self.data["splines"][index])
+        return relevant_splines
+
+    def get_spline(self, x):
+        splines = self.data["splines"]
+        i = self.__prev_used_spline_index
+        j = self.__prev_used_spline_index
+        while i < len(splines) and j >= 0:
+            if is_interval_overlapping(x, x, splines[i]["start"], splines[i]["end"]):
+                self.__prev_used_spline_index = i
+                return splines[i]
+            if is_interval_overlapping(x, x, splines[j]["start"], splines[j]["end"]):
+                self.__prev_used_spline_index = j
+                return splines[j]
+            i += 1
+            j -= 1
+
+        if j < 0:
+            while i < len(splines):
+                if is_interval_overlapping(x, x, splines[i]["start"], splines[i]["end"]):
+                    self.__prev_used_spline_index = i
+                    return splines[i]
+                i += 1
+        else:
+            while j >= 0:
+                if is_interval_overlapping(x, x, splines[j]["start"], splines[j]["end"]):
+                    self.__prev_used_spline_index = j
+                    return splines[j]
+                j -= 1
+    def get_y(self, x):
+        spline = self.get_spline(x)
+        return evaluate_polinomial(spline["polinomial"], x-spline["start"])
+
+
+
+
+
 
 
 
@@ -51,39 +101,17 @@ class Map:
 
 
 def draw_spline(win, cam, spline, step_size):
-    polinomial_length = int((spline["finnish"] - spline["start"]) / step_size) + 1
+    polinomial_length = int((spline["end"] - spline["start"]) / step_size) + 1
     starting_point = (spline["start"], evaluate_polinomial(spline["polinomial"], 0))
-    prev_point = (starting_point[0] - cam.get_x(), starting_point[1] - cam.get_y())
+    prev_point = (starting_point[0], starting_point[1])
     for x in range(polinomial_length):
         x = x * step_size
         y = evaluate_polinomial(spline["polinomial"], x)
-        point = (x + starting_point[0] - cam.get_x(), y - cam.get_y())
+        point = (x + starting_point[0], y)
         pygame.draw.line(win, (255, 0, 0), cam.transform_point_to_pixels(prev_point),
                          cam.transform_point_to_pixels(point), 2)
         prev_point = point
 
 
-def evaluate_polinomial(polinomial, x, ):
-    result = 0
-    for i in range(len(polinomial)):
-        result += polinomial[i] * pow(x, i)
-    return result
 
-
-def get_polinomial_derivative(polinomial):
-    if not polinomial:
-        return []
-
-    derivative = []
-    for i in range(len(polinomial)):
-        derivative.append(i * polinomial[i])
-    return derivative[1:]
-
-def is_interval_overlapping(x1, x2, y1, y2):
-    if x1 > y1:
-        x1, y1 = y1, x1
-        x2, y2 = y2, x2
-    if y1 > x2:
-        return False
-    return True
 
