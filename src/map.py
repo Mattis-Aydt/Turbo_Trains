@@ -32,7 +32,7 @@ class Map:
 
     def draw(self, win, cam):
         for spline in self.data["splines"]:
-            draw_spline(win, cam, spline, 0.1)
+            draw_spline(win, cam, spline, 1)
 
     def get_section(self, start, finnish, lookahead=1, lookbehind=1):
         # Should be optimised with binary-search of section
@@ -88,6 +88,9 @@ class Map:
         spline = self.get_spline(x)
         return evaluate_polinomial(spline["polinomial"], x-spline["start"])
 
+    def get_gradient(self, x):
+        spline = self.get_spline(x)
+        return evaluate_polinomial(get_polinomial_derivative(spline["polinomial"]), x-spline["start"])
 
 
 

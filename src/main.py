@@ -6,7 +6,7 @@ import map
 def draw(win, cam, map, train):
     win.fill((255, 255, 255))
     map.draw(win, cam)
-    train.draw(win, cam, map)
+    train.draw(win, cam)
 
 
     pygame.display.update()
@@ -26,6 +26,7 @@ train = Train(map)
 
 run = True
 while run:
+    train.set_acceleration_input(0)
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             run = False
@@ -48,6 +49,10 @@ while run:
         cam.move_y(1000/framerate)
     if keys[pygame.K_s]:
         cam.move_y(-1000/framerate)
+    if keys[pygame.K_RIGHT]:
+        train.set_acceleration_input(1)
+    if keys[pygame.K_LEFT]:
+        train.set_acceleration_input(-1)
 
 
 

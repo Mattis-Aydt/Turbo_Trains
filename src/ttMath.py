@@ -25,7 +25,7 @@ def is_interval_overlapping(x1, x2, y1, y2):
     return True
 
 
-def get_linear_approximation(splines, step_size=.1):
+def get_linear_approximation(splines, step_size=1):
     points = []
     for spline in splines:
         amount_of_linears = int((spline["end"] - spline["start"]) / step_size) + 1
