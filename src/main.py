@@ -59,7 +59,7 @@ while run:
 
     clock.tick(framerate)
     cam.update()
-    train.update()
+    train.update(clock.get_time()*.001)
 
 
     draw(win, cam, map, train)

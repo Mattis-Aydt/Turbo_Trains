@@ -6,25 +6,10 @@
             "start" : 0,
             "end": 1000
         },
-                {
-            "polinomial": [0, 0, 0.0005],
+        {
+            "polinomial": [0, 0.1],
             "start" : 1000,
-            "end": 1100
-        },
-                        {
-            "polinomial": [5, 0.1],
-            "start" : 1100,
-            "end": 1900
-        },
-                        {
-            "polinomial": [85, 0.1, -0.0005],
-            "start" : 1900,
-            "end": 2000
-        },
-                        {
-            "polinomial": [90],
-            "start" : 2000,
-            "end": 3000
+            "end": 20000
         }
 
     ]
