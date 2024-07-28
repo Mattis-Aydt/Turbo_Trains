@@ -8,13 +8,13 @@ class Railcar:
         self.__power = 8000000
         self.__mass = 500000
         self.map = map
-        self.length = 50
-        self.height = 2
+        self.length = 1
+        self.height = 1
 
     def draw(self, win, cam):
 
         pos = (self.__x, self.map.get_y(self.__x))
-        pos_in_pixels = cam.transform_point_to_pixels(pos)
+        pos_in_pixels = cam.transform_meters_to_pixels(pos)
         size = cam.scale((self.length, self.height))
         pygame.draw.rect(win, (0, 100, 200), (pos_in_pixels[0], pos_in_pixels[1], size[0], size[1]))
 
@@ -66,5 +66,4 @@ class Railcar:
 
         total_force = acceleration_force - g_force
         acceleration = total_force/self.__mass
-        print("speed: " + str(self.__speed*3.6) + "km/h")
         return acceleration

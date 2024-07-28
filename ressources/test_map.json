@@ -2,15 +2,29 @@
     "map_name" : "test",
     "splines" : [
         {
-            "polinomial": [0],
+            "polinomial": [0, 0, 1],
             "start" : 0,
             "end": 1000
         },
         {
-            "polinomial": [0, 0.1],
+            "polinomial": [0, 1],
             "start" : 1000,
-            "end": 20000
+            "end": 2000
+        },
+                {
+            "polinomial": [0],
+            "start" : 2000,
+            "end": 3000
+        },
+                {
+            "polinomial": [0],
+            "start" : 3000,
+            "end": 4000
+        },
+                {
+            "polinomial": [0],
+            "start" : 4000,
+            "end": 5000
         }
-
     ]
 }

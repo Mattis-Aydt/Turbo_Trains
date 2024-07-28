@@ -1,3 +1,5 @@
+import time
+
 import pygame
 from src import camera
 from src.train import Train
@@ -20,7 +22,7 @@ clock = pygame.time.Clock()
 win = pygame.display.set_mode((1000, 1000))
 cam = camera.Camera((1000, 1000))
 map = map.Map()
-map.load_data("../ressources/", "test_map.json")
+map.load_data("ressources/", "test_map.json")
 train = Train(map)
 
 
@@ -56,8 +58,9 @@ while run:
 
 
 
-
+    t1 = time.time()
     clock.tick(framerate)
+    print(time.time() - t1)
     cam.update()
     train.update(clock.get_time()*.001)
 

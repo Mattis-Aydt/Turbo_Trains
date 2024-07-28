@@ -1,4 +1,4 @@
-
+from ttMath import *
 class Camera:
     def __init__(self, win_size):
         self.__x = 0
@@ -30,7 +30,7 @@ class Camera:
     def get_zoom_y(self):
         return self.__zoom_y
 
-    def transform_point_to_pixels(self, point):
+    def transform_meters_to_pixels(self, point):
         result = (point[0] - self.__x)/self.__zoom_x + self.__win_size[0]*.5, -(point[1] - self.__y)/self.__zoom_y + self.__win_size[1]*.5
         return result
 
@@ -38,7 +38,7 @@ class Camera:
         result = point[0]/self.__zoom_x, point[1]/self.__zoom_y
         return result
 
-    def transform_point_to_meters(self):
+    def transform_pixels_to_meters(self):
         pass
 
     def move_x(self, amount):
@@ -57,4 +57,25 @@ class Camera:
 
     def is_point_in_win(self, point):
         # TODO
+        pass
+
+    def is_interval_in_win(self, x1, x2, x_achsis_interval=True):
+        y1, y2 = 0, self.__win_size[0]
+
+        if not x_achsis_interval:
+            y2 = self.__win_size[1]
+
+        if x_achsis_interval:
+            x1_as_pixels = self.transform_meters_to_pixels((x1, 0))[0]
+            x2_as_pixels = self.transform_meters_to_pixels((x2, 0))[0]
+        else:
+            x1_as_pixels = self.transform_meters_to_pixels((0, x1))[1]
+            x2_as_pixels = self.transform_meters_to_pixels((0, x2))[1]
+
+        if x1_as_pixels > x2_as_pixels:
+            x1_as_pixels, x2_as_pixels = x2_as_pixels, x1_as_pixels
+
+        return is_interval_overlapping(x1_as_pixels, x2_as_pixels, y1, y2)
+
+    def is_box_in_win(self):
         pass
