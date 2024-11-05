@@ -4,12 +4,7 @@
         {
             "polinomial": [0],
             "start" : 0,
-            "end": 1000
-        },
-        {
-            "polinomial": [0, 0.1],
-            "start" : 1000,
-            "end": 20000
+            "end": 10000
         }
 
     ]

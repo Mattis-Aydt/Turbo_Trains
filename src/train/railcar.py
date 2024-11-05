@@ -5,11 +5,12 @@ class Railcar:
     def __init__(self, map, x):
         self.__x = x
         self.__speed = 0
-        self.__power = 8000000
-        self.__mass = 500000
+        self.__power = 800000
+        self.__mass = 45000
         self.map = map
         self.length = 50
         self.height = 2
+        self.wheels = []
 
     def draw(self, win, cam):
 
@@ -52,9 +53,7 @@ class Railcar:
         new_x = left_over_speed_on_last_linear * x_length_of_last_linear + relevant_points[i][0]
         self.__x = new_x
 
-    def get_acceleration(self, power_input):
-        if power_input == 1:
-            pass
+    def get_acceleration_force(self, power_input):
         gradient = self.map.get_gradient(self.__x)
         g_force = gradient/(abs(gradient)+1) * G * self.__mass
 
@@ -65,6 +64,8 @@ class Railcar:
             acceleration_force = (self.__power*power_input) / abs(self.__speed)
 
         total_force = acceleration_force - g_force
-        acceleration = total_force/self.__mass
-        print("speed: " + str(self.__speed*3.6) + "km/h")
-        return acceleration
+
+        return total_force
+
+    def get_mass(self):
+        return self.__mass
