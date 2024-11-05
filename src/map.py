@@ -32,7 +32,8 @@ class Map:
 
     def draw(self, win, cam):
         for spline in self.data["splines"]:
-            draw_spline(win, cam, spline, 1)
+            if cam.is_interval_in_win(spline["start"], spline["end"]):
+                draw_spline(win, cam, spline, math.sqrt(cam.get_zoom_x()*10))
 
     def get_section(self, start, finnish, lookahead=1, lookbehind=1):
         # Should be optimised with binary-search of section
@@ -103,7 +104,9 @@ class Map:
 
 
 
+
 def draw_spline(win, cam, spline, step_size):
+    print(step_size)
     polinomial_length = int((spline["end"] - spline["start"]) / step_size) + 1
     starting_point = (spline["start"], evaluate_polinomial(spline["polinomial"], 0))
     prev_point = (starting_point[0], starting_point[1])
@@ -111,8 +114,8 @@ def draw_spline(win, cam, spline, step_size):
         x = x * step_size
         y = evaluate_polinomial(spline["polinomial"], x)
         point = (x + starting_point[0], y)
-        pygame.draw.line(win, (255, 0, 0), cam.transform_point_to_pixels(prev_point),
-                         cam.transform_point_to_pixels(point), 2)
+        pygame.draw.line(win, (255, 0, 0), cam.transform_meters_to_pixels(prev_point),
+                         cam.transform_meters_to_pixels(point), 2)
         prev_point = point
 
 
