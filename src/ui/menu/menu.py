@@ -4,7 +4,8 @@ from src.ui.menu.menu_type import MenuType
 
 
 class Menu(ABC):
-    def __init__(self, menu_type: MenuType):
+    def __init__(self, menu_type: MenuType, win):
+        self.win = win
         self.menu_type = menu_type
         self.next_menu_type = MenuType.OFF
 

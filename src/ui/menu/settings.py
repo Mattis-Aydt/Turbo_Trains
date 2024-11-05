@@ -4,8 +4,8 @@ from src.ui.menu.menu_type import MenuType
 
 
 class SettingsMenu(Menu):
-    def __init__(self, menu_type: MenuType):
-        super().__init__(menu_type)
+    def __init__(self, menu_type: MenuType, win):
+        super().__init__(menu_type, win)
 
     def reset(self):
         pass

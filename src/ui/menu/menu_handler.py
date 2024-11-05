@@ -4,10 +4,10 @@ from ui.menu.menu_type import MenuType
 
 
 class MenuHandler:
-    def __init__(self, ):
+    def __init__(self, win):
 
-        self.__main_menu = MainMenu(MenuType.MAIN_MENU)
-        self.__settings_menu = SettingsMenu(MenuType.SETTINGS)
+        self.__main_menu = MainMenu(MenuType.MAIN_MENU, win)
+        self.__settings_menu = SettingsMenu(MenuType.SETTINGS, win)
 
         self.__current_menu = self.__main_menu
 
