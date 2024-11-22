@@ -1,28 +1,23 @@
 import pygame
-from abc import ABC, abstractmethod
+from ui.menu.menu import Menu
 from ui.menu.menu_type import MenuType
+from ui.button import Button
+import map
+import camera
 
 
-class Menu(ABC):
+class SimulationMenu(Menu):
     def __init__(self, menu_type: MenuType, win, fps):
-        self.clock = pygame.time.Clock()
-        self.win = win
-        self.fps = fps
-        self.menu_type = menu_type
-        self.next_menu_type = MenuType.OFF
-        self._run = True
-        self.buttons = []
-        self.background_color = (200, 200, 200)
-        self.background = None
+        super().__init__(menu_type, win, fps)
+        self.simulation_handler = None
+        self.background_color = (50, 200, 30)
 
-    @abstractmethod
     def reset(self):
-        pass
-
-    def get_next_menu_type(self):
-        return self.next_menu_type
+        self._run = True
 
     def run(self):
+        if not self.simulation_handler:
+            raise AttributeError("To be able to run a simulation handler has to be set")
         while self._run:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -34,10 +29,16 @@ class Menu(ABC):
             self.win.fill(self.background_color)
             if self.background:
                 self.win.blit(self.background, (0, 0))
+
+            for drawable in self.simulation_handler.drawables:
+                drawable.draw()
+
             for button in self.buttons:
                 button.update(mouse_pos, mouse_button_clicked[0])
                 button.draw()
+
             pygame.display.update()
             self.clock.tick(self.fps)
 
-
+    def set_simulation_handler(self, simulation_handler):
+        self.simulation_handler = simulation_handler

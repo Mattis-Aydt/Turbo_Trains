@@ -1,10 +1,14 @@
 import pygame.draw
 import json
 from ttMath import *
+from ui.drawable import Drawable
 
 
-class Map:
-    def __init__(self):
+class Map(Drawable):
+    def __init__(self, win, cam):
+        super().__init__()
+        self.cam = cam
+        self.win = win
         self.data = {}
 
         self.__prev_used_spline_index = 0
@@ -15,7 +19,7 @@ class Map:
             for i in range(len(self.data["splines"])):
                 self.data["splines"][i]["id"] = i
 
-        #self.check_splines()
+        # self.check_splines()
 
     # Check wether the splines have same derivatives at end and starting point
     def check_splines(self):
@@ -30,10 +34,10 @@ class Map:
                     "Map Data seems to be incorrect. Spline needs to start at height 0. At spline  " + str(spline))
             end_derivative = evaluate_polinomial(derivative, spline[-1])
 
-    def draw(self, win, cam):
+    def draw(self):
         for spline in self.data["splines"]:
-            if cam.is_interval_in_win(spline["start"], spline["end"]):
-                draw_spline(win, cam, spline, math.sqrt(cam.get_zoom_x()*10))
+            if self.cam.is_interval_in_win(spline["start"], spline["end"]):
+                draw_spline(self.win, self.cam, spline, math.sqrt(self.cam.get_zoom_x() * 10))
 
     def get_section(self, start, finnish, lookahead=1, lookbehind=1):
         # Should be optimised with binary-search of section
@@ -85,23 +89,14 @@ class Map:
                     self.__prev_used_spline_index = j
                     return splines[j]
                 j -= 1
+
     def get_y(self, x):
         spline = self.get_spline(x)
-        return evaluate_polinomial(spline["polinomial"], x-spline["start"])
+        return evaluate_polinomial(spline["polinomial"], x - spline["start"])
 
     def get_gradient(self, x):
         spline = self.get_spline(x)
-        return evaluate_polinomial(get_polinomial_derivative(spline["polinomial"]), x-spline["start"])
-
-
-
-
-
-
-
-
-
-
+        return evaluate_polinomial(get_polinomial_derivative(spline["polinomial"]), x - spline["start"])
 
 
 
@@ -117,7 +112,3 @@ def draw_spline(win, cam, spline, step_size):
         pygame.draw.line(win, (255, 0, 0), cam.transform_meters_to_pixels(prev_point),
                          cam.transform_meters_to_pixels(point), 2)
         prev_point = point
-
-
-
-
